@@ -100,7 +100,7 @@ class DataLoader(DataLoaderBase):
                 for file in next(os.walk(os.path.join(data_dir, 'Test', 'Test for DrugNER task', directory)))[2]:
                     if file.endswith('.xml'):
                         test_paths.append(os.path.join(data_dir, 'Test', 'Test for DrugNER task', directory, file))
-            
+
             return train_paths, val_paths, test_paths
 
 
@@ -164,12 +164,12 @@ class DataLoader(DataLoaderBase):
         
         # Finalize data_df & vocab
         data_df.columns=["sentence_id", "token_id", "char_start_id", "char_end_id", "split"]
-        counter = Counter(data_df.token_id)  #token_id are actual tokens at this point
+        counter = Counter(data_df[data_df['split']=='Train'].token_id)  #fit vocab to train data only
         vocab = Vocab(counter)
         word2id = vocab.stoi
         id2word = vocab.itos
-        data_df.token_id = [word2id[w] for w in data_df.token_id]  #convert tokens to ids
-        
+        data_df.token_id = [word2id[w] for w in data_df.token_id]  #convert tokens to ids, this will set 0 to OOV tokens
+              
         # Finalize ner_df
         ner_df.columns=["sentence_id", "ner_id", "char_start_id", "char_end_id"]
         ner2id = {'NEG':0, 'drug':1, 'drug_n':2, 'brand':3, 'group':4}

@@ -36,8 +36,8 @@ def extract_features(data:pd.DataFrame, max_sample_length:int, pos_tags:list, vo
         splt = sent['split'].iloc[0]
         pad_len = max_sample_length - len(sent)
         sample = list(sent['token_id']) + [1]*pad_len  # token_id, pad with 1 for <pad>
-        prev_token = [0] + [sample[i-1] for i in range(1,len(sample))]  # previous token_id; the first token gets 0
-        next_token = [sample[i+1] for i in range(len(sample)-1)] + [0]  # next token_id; the last token gets 0
+        prev_token = [1] + [sample[i-1] for i in range(1,len(sample))]  # previous token_id; the first token gets 1
+        next_token = [sample[i+1] for i in range(len(sample)-1)] + [1]  # next token_id; the last token gets 1
         pos = [pos2id[p] for p in sent['pos']] + [0]*pad_len  # POS-tags, pad with 0 as reserved in pos2id
         vec = [get_vector(i) for i in sample]  # FastText vectors
               
